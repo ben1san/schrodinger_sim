@@ -10,7 +10,7 @@ fn main() {
     const N: usize = 1000;
     const TIME_STEPS: usize = 3000;
 
-    let potential = potential::free_space(N);
+    let potential = potential::barrier(N, DX, 45.0, 55.0, 2.0);
     let mut psi = initial_state::normal_distr(N, DX);
 
     let filename = if std::path::Path::new("../data").exists() {
@@ -22,7 +22,7 @@ fn main() {
     let mut writer = BufWriter::new(file);
 
     for step in 0..TIME_STEPS {
-        psi = crank_nicolson::evolve_step(&psi, &potential, DT, DX);
+        psi = crank_nicolson::evolve_step_pbc(&psi, &potential, DT, DX);
 
         if step % 10 == 0 {
             let mut line = String::new();
